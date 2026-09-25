@@ -1,0 +1,640 @@
+<artifact identifier="enneagram-app" type="text/html" title="Not Your Type — the Enneagram as practice">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#a4552f">
+<title>Not Your Type — the Enneagram as practice</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Not Your Type","short_name":"NYT","display":"standalone","background_color":"%23f6f1e7","theme_color":"%23a4552f","start_url":"."}'>
+<style>
+:root{
+--bg:#f6f1e7; --card:#fffdf8; --ink:#211b14; --muted:#6f6151;
+--accent:#a4552f; --accent-dark:#7e3f22; --line:#e3d8c4; --soft:#efe7d6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+#app{max-width:720px;margin:0 auto;padding:0 20px 90px}
+h1,h2,h3{font-weight:normal;line-height:1.25}
+h1{font-size:2rem;margin:.4em 0 .2em}
+h2{font-size:1.4rem;margin:1.6em 0 .4em}
+h3{font-size:1.05rem;margin:1.2em 0 .3em;color:var(--accent-dark)}
+p{margin:.6em 0}
+.small{font-size:.85rem;color:var(--muted)}
+.tagline{color:var(--muted);font-style:italic;margin-top:-4px}
+header.top{display:flex;align-items:center;gap:14px;padding:22px 0 10px;border-bottom:1px solid var(--line);margin-bottom:22px}
+header.top .brand{font-size:1.05rem;letter-spacing:.5px}
+header.top nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+header.top nav a{color:var(--muted);text-decoration:none;font-size:.8rem;padding:5px 9px;border-radius:6px;font-family:system-ui,sans-serif;letter-spacing:.4px;text-transform:uppercase}
+header.top nav a.on,header.top nav a:hover{color:var(--ink);background:var(--soft)}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);border:none;font-family:system-ui,sans-serif;font-size:.85rem;letter-spacing:.6px;text-transform:uppercase;padding:12px 22px;border-radius:8px;cursor:pointer;text-decoration:none;margin:4px 6px 4px 0}
+.btn:hover{background:#3a3128}
+.btn.accent{background:var(--accent)} .btn.accent:hover{background:var(--accent-dark)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--soft)}
+.btn.mini{padding:6px 12px;font-size:.72rem}
+.btn:disabled{opacity:.4;cursor:default}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.card.hush{background:transparent;border-style:dashed}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.chip{display:inline-block;font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.8px;text-transform:uppercase;color:var(--accent-dark);background:#f3e4d8;border-radius:20px;padding:3px 10px;margin:2px 4px 2px 0}
+.chip.gut{background:#eadfd0}.chip.heart{background:#f0dcd2}.chip.head{background:#e4e0d2}
+.label{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.divider{border:none;border-top:1px solid var(--line);margin:26px 0}
+.q-opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0;font-family:Georgia,serif;font-size:1rem;cursor:pointer;color:var(--ink)}
+.q-opt:hover{border-color:var(--accent);background:#fff}
+.q-opt.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.progress{height:4px;background:var(--soft);border-radius:2px;overflow:hidden;margin:14px 0}
+.progress i{display:block;height:100%;background:var(--accent)}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.tinput{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:Georgia,serif;font-size:.95rem;background:var(--card);color:var(--ink);margin:4px 0 10px}
+.tinput:focus{outline:none;border-color:var(--accent)}
+textarea.tinput{min-height:64px;resize:vertical}
+ul.plain{list-style:none}
+ul.plain li{padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:10px;align-items:flex-start}
+ul.plain li:last-child{border-bottom:none}
+.check{flex:none;width:20px;height:20px;accent-color:var(--accent);margin-top:3px}
+.lock{color:var(--muted);font-style:italic}
+.symwrap{display:flex;justify-content:center;padding:8px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{padding:6px 8px;border-bottom:1px dashed var(--line);text-align:left;vertical-align:top}
+th{font-family:system-ui,sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:10px;font-family:system-ui,sans-serif;font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .3s;max-width:90vw;z-index:99}
+#toast.show{opacity:1}
+.banner{background:#f3e4d8;border:1px solid #e0c4ac;border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.9rem}
+.hero{text-align:center;padding:26px 0 6px}
+.hero h1{font-size:2.6rem}
+.hero p.lead{font-size:1.1rem;color:var(--muted);max-width:520px;margin:10px auto}
+.notline{text-align:center;font-size:1.15rem;font-style:italic;color:var(--accent-dark);margin:18px 0}
+.backlink{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+.lvlgrid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.92rem}
+.lvlgrid b{font-family:system-ui,sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;padding-top:2px}
+details{margin:10px 0}
+summary{cursor:pointer;font-family:system-ui,sans-serif;font-size:.85rem;color:var(--accent-dark)}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+@media print{header.top nav{display:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<noscript><div style="max-width:600px;margin:60px auto;text-align:center;font-family:Georgia,serif">This application runs entirely in your browser and needs JavaScript. Nothing is ever sent anywhere.</div></noscript>
+<script>
+/* ============================================================
+NOT YOUR TYPE — the Enneagram as practice
+No account. No server. Everything lives in this browser.
+All teaching content is original writing; core concepts are
+public domain (see Arica Institute v. Palmer, 2d Cir. 1992).
+============================================================ */
+
+/* ---------------- DATA: the nine fixations ---------------- */
+const TYPES = {
+1:{name:"The Reformer",aka:"the perfectionist, the one carrying an inner critic",center:"gut",emotion:"Anger — swallowed",
+passion:"Anger",fixation:"Resentment",virtue:"Serenity",holy:"Holy Perfection",
+fear:"being corrupt, defective, wrong",desire:"integrity, to be good",
+tagline:"the one carrying an inner critic",
+loop:"There is a voice in you measuring the gap between how things are and how they should be — and it starts with you. You fix, improve, correct, and the anger at everything imperfect folds inward into resentment. The secret: perfection was never the point. Rightness that cannot rest is not virtue.",
+healthy:"Wise, discerning, tolerant. You see what is wrong and act without needing to punish. Your standards serve life instead of auditing it — things are imperfect, and you can be at peace anyway.",
+average:"Opinionated, rigid, self-controlled to a fault. Pleasure is postponed until everything is in order — which it never is. The resentment ledger grows: all this effort, and look how little they care.",
+unhealthy:"The critic turns tyrant — obsessive self-punishment, condemnation of others, work that never ends because nothing is ever clean enough.",
+toGrowth:{to:7,practice:"Let the day include delight. Do something pointless and pleasurable without earning it first. More than one right way exists."},
+toStress:{to:4,note:"Under pressure you slide toward moodiness and a private sense of being fundamentally flawed — the sadness the perfectionism was holding at bay."},
+confirm:["Catch the critic once today. Whose voice is it, actually?","Notice one redo — something you fixed that was already fine.","Feel the anger as a body event (jaw, shoulders) before it becomes a list of wrongs.","Leave something at 90% on purpose. Sit with the itch.","Say 'that works for me' and mean it — no correction added.","Do one thing badly in front of someone. Notice: nobody died.","Ask: what do I want that has nothing to do with being good?"],
+catchHint:"Catch the critic mid-sentence. Write what it said, exactly.",
+arrow2min:"Two minutes: list three things you would do if it didn't have to be done right — then do one of them badly, on purpose, now.",
+shocks:["Eat one meal doing nothing else — just eat.","Submit the imperfect thing.","Thank someone for help you would rather have done yourself."],
+wings:[{w:"1w9",t:"An idealist with a cooler, detached perfection — calmer surface, more withdrawn judgment."},{w:"1w2",t:"A reformer with heat — advocates, corrects out loud, tries to improve you."}]},
+
+2:{name:"The Helper",aka:"the giver, the one who earns love by meeting needs",center:"heart",emotion:"Shame — given away",
+passion:"Pride",fixation:"Flattery",virtue:"Humility",holy:"Holy Will",
+fear:"being unwanted, unloved for themselves",desire:"to feel loved",
+tagline:"the one who earns love by meeting needs",
+loop:"You read what people need before they know it themselves, and you deliver — because being needed feels like being loved. The pride is invisible: 'I don't need anything.' But beneath the giving is a ledger, and when it goes unhonored, warmth turns to hurt.",
+healthy:"Genuinely, freely caring — you give without hooks and receive without guilt. Your attention to others comes from fullness, not hunger.",
+average:"People-pleasing with strings. Compliments and care flow, but you keep score. You hint instead of ask, then feel unseen. Saying no feels like abandoning people.",
+unhealthy:"Martyrdom — coercive 'love,' smothering, bitter resentment at the ungrateful, health and self abandoned for people who never asked.",
+toGrowth:{to:4,practice:"Feel your own feelings before feeling everyone's. Make something that is yours. Name one need directly, out loud, to the person who can meet it."},
+toStress:{to:8,note:"Under pressure the niceness snaps — sudden demands, aggression, 'after everything I have done for you.'"},
+confirm:["Notice one yes you said when you meant no.","Do something for yourself that helps no one else.","Ask directly for something instead of hinting.","Notice the ledger: where are you keeping score today?","Let someone else be the helper. Receive without repaying.","Say what you feel before asking what they feel.","Ask someone close: what do you wish I would just tell you directly?"],
+catchHint:"Catch the moment the giving had a hook — and the moment the hook went unhonored.",
+arrow2min:"Two minutes: write the honest answer to 'what do I actually feel right now?' — no editing toward acceptable. Then name one need out loud.",
+shocks:["Ask for something real today — directly.","Spend an evening not helping anyone.","Tell someone a need you have been hinting at."],
+wings:[{w:"2w1",t:"A servant with standards — dutiful care, guilt-driven helping, quiet reform of the people being helped."},{w:"2w3",t:"A host with charisma — generous performance, love as achievement, warmth with an audience."}]},
+
+3:{name:"The Achiever",aka:"the performer, the one who becomes the image",center:"heart",emotion:"Shame — outrun",
+passion:"Deceit (self-deceit)",fixation:"Vanity",virtue:"Truthfulness",holy:"Holy Hope",
+fear:"being worthless without achievement",desire:"to feel valuable",
+tagline:"the one who becomes the image",
+loop:"You learned that love follows performance, so you became excellent at becoming whatever wins. The deceit is not lying to others first — it is lying to yourself: deferring feelings, mistaking the résumé for the self. The question underneath: if I stop achieving, am I still worth anything?",
+healthy:"Authentic excellence — genuinely capable and genuinely yourself. You motivate others by seeing them, not outshining them. Rest is allowed; the self exists offstage.",
+average:"Image management at speed. Feelings are deferred until the deadline passes (they never do). You compete without admitting it and shape-shift to whatever audience is present.",
+unhealthy:"Burnout or betrayal — corner-cutting, exploiting relationships, then collapse: the machine stops and there is nothing underneath.",
+toGrowth:{to:6,practice:"Commit to something slow: a team, a loyalty, a person — where you are valued for showing up, not shining. Ask your body what it feels. Stay for the answer."},
+toStress:{to:9,note:"Under pressure you go numb — apathy, busywork, hours lost to nothing. The engine idles because the fuel (feeling) was cut off."},
+confirm:["Name three feelings you had today. Not 'fine.'","Notice one thing you did for the appearance of doing it.","Tell someone one thing you are struggling with. Unpolished.","Where did you compete today and not say so?","Do something you are bad at. Stay while it is uncomfortable.","Ask: who am I when no one is watching? Write two honest lines.","Rest deliberately — no output — and notice what rises."],
+catchHint:"Catch the shape-shift: which 'you' showed up, and whose applause was it for?",
+arrow2min:"Two minutes: write what you actually feel and what you are afraid of about it. Loyalty over performance today — ask how someone is and do not redirect to yourself.",
+shocks:["Admit one failure to someone who respects you.","Spend an hour on something with no productive value.","Say 'I don't know' and leave it standing."],
+wings:[{w:"3w2",t:"A charming achiever — wins people, sells the image warmly, wins come through connection."},{w:"3w4",t:"A driven professional with depth-hunger — image plus an ache for authenticity, darker ambition."}]},
+
+4:{name:"The Individualist",aka:"the romantic, the one missing something essential",center:"heart",emotion:"Shame — internalized",
+passion:"Envy",fixation:"Melancholy",virtue:"Equanimity",holy:"Holy Origin",
+fear:"having no identity or significance",desire:"to be authentically themselves",
+tagline:"the one missing something essential",
+loop:"You scan for what is missing — in yourself, in the moment, in others — and what is missing always looks more real than what is here. Others seem to have the ease you lack. So you deepen the story of being different, and the feeling becomes the identity. The envy is not wanting their life; it is grieving yours as it actually is.",
+healthy:"Profoundly present and creative — you feel everything and are owned by nothing. Your depth becomes a gift to others instead of a fortress.",
+average:"Mood as master. You amplify the melancholy that feels most 'you,' withdraw into meaning, rehearse old wounds, and let the ordinary go unnoticed and unloved.",
+unhealthy:"Despair — self-sabotage, pushing people away to confirm abandonment, bitterness at everyone who seems to have it easier.",
+toGrowth:{to:1,practice:"Structure is mercy. Act on principle instead of iterating feelings: the disciplined thing, at the scheduled time, regardless of mood. Action completes what feeling only circles."},
+toStress:{to:2,note:"Under pressure you become clingy and over-giving — earning a closeness you fear you cannot simply have."},
+confirm:["Catch one comparison today. What was it really about?","Stay in a plain moment — no amplifying, no story. Two minutes.","Write three ordinary things that were actually fine today.","Notice: did you rehearse a feeling, or feel it?","Contact someone you envy. Ask them a real question.","Finish the beautiful thing instead of starting a truer one.","Ask someone close: when do I disappear into my inner world on you?"],
+catchHint:"Catch the amplification — the moment a feeling became a story about you.",
+arrow2min:"Two minutes: choose the small disciplined act you have avoided — tidy the corner, send the email, walk — and do it now, for the sake of doing. Let the mood be whatever it is.",
+shocks:["Do the mundane task you have been avoiding — feel the completion.","Say one grateful thing about something ordinary.","Finish something today instead of starting something new."],
+wings:[{w:"4w3",t:"An aspirational artist — turns feeling into image and success; envy with polish."},{w:"4w5",t:"A hermit romantic — interior, symbolic, withdrawn into meaning."}]},
+
+5:{name:"The Investigator",aka:"the observer, the one conserving themselves for later",center:"head",emotion:"Fear — withdrawn from",
+passion:"Avarice",fixation:"Stinginess",virtue:"Non-attachment",holy:"Holy Omniscience",
+fear:"being helpless, incapable, overwhelmed",desire:"competence, understanding",
+tagline:"the one conserving themselves for later",
+loop:"Energy, time, knowledge, self — you hold them close, because the world demands more than you believe you have. So you retreat to the mind, where you can prepare, master, minimize needs. Life keeps getting postponed until you know enough. The avarice is not greed; it is a fortress built against depletion.",
+healthy:"Visionary and engaged — you know deeply and step forward with it. Curiosity connects you to the world instead of substituting for it.",
+average:"Detached and hoarded. You watch instead of join, collect instead of share, and guard your time with secret protocols. People get the abstract version of you.",
+unhealthy:"Total retreat — isolated, paranoid about intrusion, nihilistic, starving in a fortress of your own construction.",
+toGrowth:{to:8,practice:"Get in the body and claim space. Move, exert, say the strong opinion in the room, spend the energy before you feel ready. Being is proven in action, not stored in notes."},
+toStress:{to:7,note:"Under pressure the mind scatters — leaping between interests, escaping into novelty and noise; hoarding replaced by restless sampling."},
+confirm:["Notice one thing you withheld today — time, information, presence.","Say yes to something before you feel ready.","Share unfinished work with one person.","Move your body hard enough to notice it exists.","Join before you feel prepared. Stay in the room.","Count your retreats today. How many were need, and how many were habit?","Ask someone close: where do I go quiet on you?"],
+catchHint:"Catch the withdrawal — the moment you left the room before leaving the room.",
+arrow2min:"Two minutes: stand, breathe low, and say the strong version of the thing you have been hedging — out loud, even alone. Then do one physical thing with force: stairs, pushups, a fast walk.",
+shocks:["Speak first in a meeting today.","Give away something you were saving.","Do something physically demanding before noon."],
+wings:[{w:"5w4",t:"A philosopher-poet — knowledge plus personal meaning; moody abstraction."},{w:"5w6",t:"An analyst — cautious, technical, skeptical; systems as safety."}]},
+
+6:{name:"The Loyalist",aka:"the skeptic, the one scanning for what could go wrong",center:"head",emotion:"Fear — amplified",
+passion:"Fear",fixation:"Doubt",virtue:"Courage",holy:"Holy Faith",
+fear:"being without support or guidance",desire:"security, solid ground",
+tagline:"the one scanning for what could go wrong",
+loop:"Your mind is a brilliant security system that never turns off — testing, doubting, playing out the worst case so it cannot ambush you. You doubt authority and seek it, distrust and commit. The fear rarely names itself; it disguises itself as realism, duty, vigilance. Courage is not the absence of the scan — it is walking anyway.",
+healthy:"Steadfast, brave, cooperative — alert without alarm, loyal to people and principles worth loyalty. You become trustworthy ground others stand on.",
+average:"Worry as management. Indecision, reassurance-seeking, over-testing people, then sudden counterphobic leaps to prove the fear wrong.",
+unhealthy:"Paranoid panic — betrayal seen everywhere, preemptive lashing out, creating the very hostility you feared.",
+toGrowth:{to:9,practice:"Come down into the body, where the fear cannot multiply. Ground, simplify, trust the present — the floor holds. Not everything needs to be figured out; some things need to be walked."},
+toStress:{to:3,note:"Under pressure you perform harder — proving, achieving, polishing an image to make the world safe. The anxiety goes underground and returns as exhaustion."},
+confirm:["Count the reassurance-seeking today. What was under it?","Notice one disaster your mind rehearsed that never happened.","Make one small decision in 60 seconds. No second round.","Where did you doubt someone loyal today? Test versus trust.","Do the feared thing at 60% certainty.","Notice where fear lives in your body. Breathe there for three minutes.","Ask someone close: when do my warnings help, and when do they just spread alarm?"],
+catchHint:"Catch the scan — the moment the mind started playing out the worst case.",
+arrow2min:"Two minutes: feet flat, feel the weight, lengthen the exhale. Then take one step on the feared thing without more data. The ground holds; the scan was optional.",
+shocks:["Decide in one minute and act.","Make the avoided call now, before rehearsing it.","Go somewhere without planning the route in detail."],
+wings:[{w:"6w5",t:"A defender through knowledge — anxious but armored with facts; more withdrawn."},{w:"6w7",t:"A buddy-skeptic — anxiety managed with charm and humor; faster affiliation."}]},
+
+7:{name:"The Enthusiast",aka:"the epicure, the one outrunning the ache",center:"head",emotion:"Fear — skipped over",
+passion:"Gluttony (for experience)",fixation:"Planning",virtue:"Sobriety",holy:"Holy Work",
+fear:"being trapped in pain or deprivation",desire:"satisfaction, freedom",
+tagline:"the one outrunning the ache",
+loop:"Life is an infinite buffet and you want to taste all of it — because stopping means feeling what is underneath, and underneath there might be pain. So you stay fast, reframe everything positive, keep the exits open. The gluttony is not for food; it is for stimulation. And satisfaction keeps moving one option ahead of you.",
+healthy:"Grateful, present, multifaceted joy — you finally taste what you are actually eating. Your enthusiasm becomes fertile for others instead of escapist.",
+average:"Overbooked and scattered. Options multiply, commitments blur, discomfort gets reframed into silver linings, and everything interesting stays half-done.",
+unhealthy:"Panicked flight — impulsive excess, escapism into substances or schemes, a frenzy that cannot stop because stopping means the pain lands.",
+toGrowth:{to:5,practice:"Depth over breadth. Sit in silence and let the discomfort speak. Take one thing to completion. The pain you keep outrunning is smaller up close, and it transforms when you stay."},
+toStress:{to:1,note:"Under pressure the lightness goes rigid — critical, perfectionist, irritated at everyone's sloppiness. The reframe machine breaks down into fault-finding."},
+confirm:["Count the open loops: projects, tabs, plans. What stays unfinished?","Sit ten minutes with one discomfort — no phone, no reframe.","Notice today's escape velocity: what feeling were you outrunning?","Choose the un-fun option once. On purpose.","Finish one thing to done. Not almost.","Notice the planning mind — how much of today did you spend in next week?","Ask someone close: where do I go when things get heavy?"],
+catchHint:"Catch the reframe — the moment something painful became 'actually, it's an opportunity…'",
+arrow2min:"Two minutes: sit still, eyes soft, and do nothing. When the itch for the next thing comes, note it and stay. Depth is just duration.",
+shocks:["Take one thing to completion today.","Ten minutes of silence before the first input of the day.","Say no to the interesting thing. Notice what that frees."],
+wings:[{w:"7w6",t:"A fun loyalist — enthusiasm plus allegiance; more easily anxious."},{w:"7w8",t:"An adventurer — big appetite backed by force; assertive excess."}]},
+
+8:{name:"The Challenger",aka:"the protector, the one in armor",center:"gut",emotion:"Anger — expressed",
+passion:"Lust (intensity)",fixation:"Vengeance",virtue:"Innocence",holy:"Holy Truth",
+fear:"being controlled, violated, betrayed",desire:"autonomy, to protect what is theirs",
+tagline:"the one in armor",
+loop:"The world taught you early that softness gets punished, so you built armor and called it strength. You take up space, test loyalty, meet intensity with more intensity. The lust is not sexual — it is for everything at full throttle. Underneath: a heart that decided no one would ever see it coming, including the people who would never hurt it.",
+healthy:"Magnanimous, protective, real — your force builds and shields. Vulnerability becomes a choice rather than a defeat, and it makes your strength trustworthy.",
+average:"Domineering and excessive. Everything escalates, blunt becomes brutal, control is asserted 'for everyone's good,' and tenderness hides behind demands.",
+unhealthy:"Ruthless — destroying what threatens you, vengeful, hardened into a tyranny where even allies become subjects.",
+toGrowth:{to:2,practice:"Open the armor from the inside: show care as tenderness, not protection. Let someone see the need under the demand. The heart was never the weakness; it was the point."},
+toStress:{to:5,note:"Under pressure you go cold — withdrawn, secretive, strategizing alone. The force retreats into a fortress nobody gets briefed on."},
+confirm:["Notice one moment softness was available and you armored instead.","Ask for help with something real. Let it be slightly uncomfortable.","Where did you turn up the volume today? What was under it?","Say one tender thing to someone. Slowly.","Let someone else drive — the plan, the conversation, the wheel.","Did you test anyone's loyalty today? What did it cost?","Ask someone close: what does my force feel like from the inside?"],
+catchHint:"Catch the armor going on — the moment you chose force over disclosure.",
+arrow2min:"Two minutes: think of someone you protect and tell them one true soft thing — appreciation, worry, love — without a joke or a task attached to it.",
+shocks:["Reveal one tender thing today.","Ask for help you do not strictly need.","Apologize first. Without the 'but.'"],
+wings:[{w:"8w7",t:"A maverick — force plus appetite; takes ground fast, burns hot."},{w:"8w9",t:"A bear — calm authority, force in reserve; immovable more than loud."}]},
+
+9:{name:"The Peacemaker",aka:"the mediator, the one who forgets themselves to keep the peace",center:"gut",emotion:"Anger — asleep to it",
+passion:"Sloth (of self)",fixation:"Indolence",virtue:"Right Action",holy:"Holy Love",
+fear:"loss, separation, conflict",desire:"inner stability, peace of mind",
+tagline:"the one who forgets themselves to keep the peace",
+loop:"You merge with other people's agendas because claiming your own feels dangerous — somewhere along the way you learned that wanting things creates conflict. So you go along, numb out with routines and comforts, and call the resulting calm peace. The sloth is not laziness of the body; it is laziness about being yourself.",
+healthy:"Truly at ease in your own skin, you bring a healing, unhurried presence. Decisions come because you actually inhabit your preferences. You can hold conflict without breaking — yours or anyone else's.",
+average:"You defer, accommodate, deflect with 'whatever works for you.' Comfort and routine quietly run the show. Anger leaks out as stubbornness, silence, and sarcasm rather than words.",
+unhealthy:"You shut down entirely — dissociated from what you want, neglecting what needs doing, letting problems metastasize because addressing them means conflict.",
+toGrowth:{to:3,practice:"Claim your agenda. Choose a goal and act on it before consulting anyone's comfort, including your own habit of ease. Say the priority out loud, early, to the people it affects."},
+toStress:{to:6,note:"Under pressure you slide toward worry — anxious what-ifs, doubting your own judgment, seeking reassurance. The peace-seeking has turned on itself."},
+confirm:["Notice one moment you went along to keep the peace. Write what you actually wanted.","Catch yourself numbing — scrolling, snacking, tidying — and ask: what am I not feeling?","Say your preference first today, in something small. Coffee, route, plan.","Notice the word 'fine.' How many times did you use it about yourself?","Sit in one disagreement today without smoothing it. Breathe. Stay.","Do the postponed thing — the one you have been 'getting to.'","Ask someone close: where do I disappear?"],
+catchHint:"Catch the merger — the moment you said yes when you meant nothing.",
+arrow2min:"Two minutes: pick the one task you have been deferring and do its first five minutes now, badly if needed. The point is your name on the doing.",
+shocks:["State an unpopular preference at the table today.","Start the postponed project before you feel ready.","Let one conflict stay unresolved tonight — sit with it."],
+wings:[{w:"9w8",t:"A peacemaker with a spine — easy surface, sudden force when something they love is pushed."},{w:"9w1",t:"A gentle idealist — calm ordered routines, quieter perfectionism, peace kept through tidiness."}]}
+};
+const ORDER=[1,2,3,4,5,6,7,8,9];
+const CENTERNAME={gut:"The Gut — anger",heart:"The Heart — shame",head:"The Head — fear"};
+const INSTINCTS=[
+{k:"sp",n:"Self-preservation",t:"The instinct of floor and walls. Security, resources, health, comfort. When it leads, the fixation organizes itself around staying safe — the house, the savings, the routine. In the blind spot, you neglect your own foundations."},
+{k:"so",n:"Social",t:"The instinct of the hive. Belonging, status, contribution, your read of the room. When it leads, the fixation runs through comparison and place: who is in, where I stand, what the group needs. In the blind spot, groups feel like weather — present, but unreadable."},
+{k:"sx",n:"One-to-one",t:"The instinct of the charge. Attraction, fusion, intensity, the magnetic pull toward and away. When it leads, the fixation runs through the beloved and the edge: chemistry, merger, rupture. In the blind spot, intimacy stays abstract — close, but bloodless."}];
+const HOLYTEXT={
+1:"Nothing is missing from the world's perfection — including its flaws. The flaw is not the enemy of the pattern; it is part of the weaving. When you stop auditioning for rightness, right action becomes obvious.",
+2:"There is a will moving through things that is not yours to steer — and your needs ride it too. You do not have to purchase love with service; what is yours comes through being, not bargaining.",
+3:"What you are reaching for is not earned by performance — being itself is already the fulfillment in motion. Hope is not the next achievement; it is the ground under the one you are standing on.",
+4:"You come from the same source as everyone you envy. Nothing essential was left out of you. The missing piece was a direction of attention, not a missing part.",
+5:"Knowing is not hoarded; it participates. The mind is not separate from the world it watches — understanding arrives through contact, not distance.",
+6:"Ground exists beneath the scanning. Faith is not believing a doctrine; it is the discovered experience that being itself holds you when the mind lets go of the railing.",
+7:"Real satisfaction is in the work in front of you, not the one imagined behind it. Joy is not at the end of the list; it is the quality of the doing.",
+8:"Truth needs no armor. All the truths are one truth, and it was never against you — the softness you defended against is what the force was protecting all along.",
+9:"Love is not a peace you negotiate by disappearing. You are as real, as needed, and as present as anyone in the room. Being here fully is the love."};
+
+/* ---------------- DATA: the inquiry ---------------- */
+const QUESTIONS=[
+{q:"A plan falls apart at the last minute. Your first honest reaction?",o:[["Secretly relieved — one less commitment.",9],["Annoyed — I would have done it properly.",1],["Already seeing the new opportunity inside it.",7]]},
+{q:"Someone criticizes your work in front of others.",o:[["My mind starts building the defense immediately.",3],["I go quiet, and it stings for days.",4],["I want the facts — were they technically right?",5]]},
+{q:"Your closest friendship, in one sentence:",o:[["I am the one who holds things together.",2],["I am the one who is always there, no drama.",6],["I keep a comfortable distance even from people I love.",5]]},
+{q:"Under real pressure, you become more:",o:[["Controlling and intense.",8],["Anxious and second-guessing.",6],["Detached and absent.",9]]},
+{q:"What secretly bothers you most at a party?",o:[["Standing around without a role or a task.",1],["Nobody finding me interesting or impressive.",3],["Small talk when I want one real conversation.",4]]},
+{q:"Compliments make you:",o:[["Suspicious — what do they want?",6],["Pleased — but never quite enough.",3],["Uncomfortable — they cannot see the whole picture.",4]]},
+{q:"Your desk, inbox, and life admin:",o:[["In order, or it gnaws at me.",1],["Chaos I have stopped apologizing for.",7],["Fine — I know where the important things are.",5]]},
+{q:"Someone is upset with you. You:",o:[["Fix it fast — the tension is unbearable.",9],["Go straight at it and clear the air.",8],["Replay what I could have done wrong all night.",6]]},
+{q:"The fantasy that quietly recurs:",o:[["Disappearing somewhere no one needs anything from me.",5],["The life where I finally get everything right.",1],["Being so loved I never have to ask.",2]]},
+{q:"You learn best by:",o:[["Doing it with my hands.",8],["Understanding the whole system first.",5],["Talking it through with people.",6]]},
+{q:"People would describe your mood as:",o:[["Mostly even-keeled.",9],["Weather — it changes and everyone knows.",4],["Upbeat more often than not.",7]]},
+{q:"What do you do with anger?",o:[["It leaks out sideways — sighs, sarcasm, silence.",9],["It comes out clean and direct, then it is over.",8],["It turns into a case file of everything wrong.",1]]},
+{q:"In a group, you tend to:",o:[["Notice who is left out and pull them in.",2],["Challenge the plan if it is weak.",8],["Let others decide; I will adapt.",9]]},
+{q:"Your relationship to rules:",o:[["Rules exist for reasons — follow them unless they are wrong.",1],["Rules are starting points — I optimize around them.",3],["Rules are other people's anxiety.",7]]},
+{q:"You feel most yourself when:",o:[["Useful — someone needed me and I delivered.",2],["Excellent — measurable results.",3],["Undisturbed — deep in my own world.",5]]},
+{q:"A decision must be made and the data is thin. You:",o:[["Trust my gut and move.",8],["Gather more opinions to be sure.",6],["Feel my way — what does this want to become?",4]]},
+{q:"Hardest sentence to say out loud:",o:[["'I need help.'",2],["'I was wrong.'",1],["'I don't know.'",3]]},
+{q:"A friend succeeds at exactly what you wanted.",o:[["I am happy for them — and something in me aches.",4],["I immediately ask what they did and start my plan.",3],["I am genuinely glad — plenty to go around.",7]]},
+{q:"Your body under stress:",o:[["Chest tight, jaw set, ready to push.",8],["Stomach knotted, scanning for what could go wrong.",6],["Fog — I get sleepy, hungry, absent.",9]]},
+{q:"When you love something — a hobby, a project:",o:[["I go deep — study everything, quietly obsessed.",5],["I tell everyone and recruit them into the joy.",7],["I perfect it in private before showing anyone.",4]]},
+{q:"Conflict in the room:",o:[["I start mediating before anyone says a word.",9],["I name it — why is everyone pretending?",8],["I feel it in my chest before anyone speaks.",4]]},
+{q:"Depending on someone feels:",o:[["Intolerable — I keep my needs minimal.",5],["Warm — mutual need is how love works.",2],["Dangerous — I do not owe anyone.",8]]},
+{q:"What do you avoid feeling most?",o:[["Emptiness — so I keep moving.",7],["Weakness — so I stay armored.",8],["My own anger — it frightens me.",1]]},
+{q:"The story about you that stings most:",o:[["That I am cold or aloof.",5],["That I am uptight or rigid.",1],["That I am clingy or calculating.",2]]},
+{q:"At your best, people say you:",o:[["See what is wrong before it bites.",6],["Make the impossible feel like fun.",7],["Hold everyone together.",2]]},
+{q:"At your worst, you:",o:[["Nag, correct, simmer.",1],["Charm, spin, perform.",3],["Withdraw into my shell.",5]]},
+{q:"The sentence that lands too deep:",o:[["'You are too much.'",4],["'You are not enough.'",3],["'You don't matter here.'",9]]}
+];
+
+/* ---------------- STATE ---------------- */
+const KEY="nyt_v1";
+function blank(){return {answers:Array(QUESTIONS.length).fill(null),confirmed:null,confirms:{},lawsSeen:false,checkins:[],catches:[],arrowLog:[],shockLog:[],octaves:[],shockChoice:null,lastExport:0};}
+let S;
+try{S=Object.assign(blank(),JSON.parse(localStorage.getItem(KEY)||"{}"));}catch(e){S=blank();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function weekKey(){const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+
+/* ---------------- SYMBOL ---------------- /
+function pt(n,cx,cy,r){const a=(-90+n40)Math.PI/180;return [cx+rMath.cos(a),cy+r*Math.sin(a)];}
+function symbol(size,opts){opts=opts||{};const c=60,r=48,cx=c,cy=c;
+let inner="";
+const hex=[1,4,2,8,5,7,1];let hp="";
+hex.forEach(n=>{const p=pt(n%9,cx,cy,r);hp+=(hp?" ":"")+p[0].toFixed(1)+","+p[1].toFixed(1);});
+inner+='<polyline points="'+hp+'" fill="none" stroke="'+(opts.ink||"#211b14")+'" stroke-width="1.1"/>';
+let tp="";[3,6,9].forEach(n=>{const p=pt(n%9,cx,cy,r);tp+=(tp?" ":"")+p[0].toFixed(1)+","+p[1].toFixed(1);});
+inner+='<polygon points="'+tp+'" fill="none" stroke="'+(opts.accent||"#a4552f")+'" stroke-width="1.4"/>';
+for(let n=0;n<9;n++){const p=pt(n,cx,cy,r);const lp=pt(n,cx,cy,r+8);
+inner+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(opts.big?2.6:2)+'" fill="'+(opts.accent||"#a4552f")+'"/>';
+inner+='<text x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+2.6).toFixed(1)+'" text-anchor="middle" font-size="'+(opts.big?9:7.5)+'" font-family="Georgia,serif" fill="'+(opts.ink||"#211b14")+'">'+(n===0?9:n)+'</text>';}
+return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120" role="img" aria-label="The Enneagram symbol"><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+(opts.ink||"#211b14")+'" stroke-width="1"/>'+inner+'</svg>';}
+
+/* ---------------- HELPERS ---------------- */
+const 
+=s=>document.querySelector(s);
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function toast(m){const t=
+("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2800);}
+function scores(){const sc={};ORDER.forEach(n=>sc[n]=0);S.answers.forEach(a=>{if(a)sc[a]++;});return sc;}
+function top3(){const sc=scores();return Object.entries(sc).map(([n,c])=>({t:+n,c})).sort((a,b)=>b.c-a.c||a.t-b.t).slice(0,3);}
+function nCheckins(){return S.checkins.length;}
+function nCatches(){return S.catches.length;}
+function streak(){const acts=new Set();S.checkins.forEach(c=>acts.add(c.date));S.catches.forEach(c=>acts.add(c.date));S.arrowLog.forEach(c=>acts.add(c.date));
+let s=0,d=0;if(!acts.has(today())){if(!acts.has(daysAgo(1)))return 0;d=1;}
+while(acts.has(daysAgo(d))){s++;d++;}return s;}
+function unlockWings(){return nCheckins()>=3;}
+function unlockInst(){return nCheckins()>=7;}
+function unlockDepth(){return nCatches()>=10;}
+
+/* ---------------- VIEWS ---------------- */
+function header(active){
+const links=[["home","Home"],["inquiry","Inquiry"],["practice","Practice"],["map","The Map"],["process","Process"],["settings","Settings"]];
+return '<header class="top"><span class="brand" style="font-style:italic">not·your·type</span><nav>'
++links.map(l=>'<a href="#/'+l[0]+'" class="'+(active===l[0]?"on":"")+'">'+l[1]+'</a>').join("")
++'</nav></header>';}
+
+function vHome(){
+return header("home")
++'<div class="hero"><div class="symwrap">'+symbol(190,{big:true})+'</div>'
++'<h1>Not your type.</h1>'
++'<p class="lead">The Enneagram as it was meant to be used — not a label to wear, but a fixation to see through.</p></div>'
++'<div class="grid3">'
++'<div class="card"><span class="label">I · The doorway</span><p>The quiz is a hypothesis, not a verdict. Personality typing measures behavior; the Enneagram is about <em>motivation</em>. So you will test, then spend a week confirming the lens before anything is final.</p></div>'
++'<div class="card"><span class="label">II · The medicine</span><p>Every type carries a passion <em>and</em> a virtue, a fixation <em>and</em> a holy idea. Most Enneagram content teaches the diagnosis and skips the treatment. This one does not.</p></div>'
++'<div class="card"><span class="label">III · The exit</span><p>The type is the loop your mind falls into when it forgets. Catch it in the act — in the body, in real time — and in that moment you are free. The goal is dis-identification, not a better identity.</p></div>'
++'</div>'
++'<div class="notline">“You are not your type. That is the whole teaching.”</div>'
++'<p style="text-align:center"><a class="btn accent" href="#/inquiry">Begin the inquiry</a><a class="btn ghost" href="#/known">I already know my type</a></p>'
++'<p style="text-align:center"><a class="backlink" href="#/map">or go straight to the map →</a> &nbsp; <a class="backlink" href="#/process">process mode (the octave tool) →</a></p>'
++'<div class="card hush" style="margin-top:26px"><span class="label">Privacy</span><p class="small">No account. No server. No tracking. Your answers, your journal, and your practice live only in this browser — the developer cannot see them even if asked. Export a backup from Settings; that file is the only copy in existence. <b>Bookmark this page — your bookmark is your account.</b></p></div>'
++'<footer>This is a contemplative practice tool, not therapy, medicine, or a clinical assessment. If you are in real distress, talk to a real human.
+<span class="small">The Enneagram symbol and its doctrines are in the public domain. All written content here is original.</span></footer>';}
+
+function vKnown(){
+return header("home")
++'<h1>You already know?</h1><p class="small">Fine — many people arrive already typed. Choose your lens and begin. You can change it later in Settings. (If you have ever been <em>arguing</em> about your type with friends, that is usually a sign the true one is in the other two candidates.)</p>'
++'<div class="grid3">'+ORDER.map(n=>'<div class="card" style="padding:14px 16px"><b>'+n+' · '+TYPES[n].name+'</b><div class="small" style="font-style:italic">'+TYPES[n].tagline+'</div><button class="btn mini accent" style="margin-top:8px" data-action="know-confirm" data-t="'+n+'">Work with this lens</button></div>').join("")+'</div>';}
+
+function vInquiry(){
+const i=S.answers.findIndex(a=>a===null);
+const idx=(i===-1?QUESTIONS.length-1:i);
+const Q=QUESTIONS[idx];
+return header("inquiry")
++'<h1>The inquiry</h1>'
++'<p class="small">Answer as you actually are on an <b>ordinary day</b> — not your best day, not your aspirational self. If two answers are true, pick the one that happens <em>first</em> or <em>most often</em>.</p>'
++'<div class="progress"><i style="width:'+Math.round(idx/QUESTIONS.length*100)+'%"></i></div>'
++'<p class="small">'+(idx+1)+' of '+QUESTIONS.length+'</p>'
++'<div class="card"><h3 style="margin-top:0">'+esc(Q.q)+'</h3>'
++Q.o.map(o=>'<button class="q-opt'+(S.answers[idx]===o[1]?' sel':'')+'" data-action="q-pick" data-i="'+idx+'" data-t="'+o[1]+'">'+esc(o[0])+'</button>').join("")
++'</div>'
++'<p>'+(idx>0?'<button class="btn ghost mini" data-action="q-back" data-i="'+idx+'">← back</button>':'')+'</p>';}
+
+function vResults(){
+const t3=top3(),sc=scores();
+const tot=Object.values(sc).reduce((a,b)=>a+b,0);
+const centers={gut:0,heart:0,head:0};ORDER.forEach(n=>{if(sc[n])centers[TYPES[n].center]+=sc[n];});
+return header("inquiry")
++'<h1>Three hypotheses</h1>'
++'<p class="small">The Enneagram is about motivation, and motivation hides from questionnaires. So this is not your type — this is the shortlist your answers produced. Each lens below comes with a <b>seven-day confirmation practice</b>: small, specific observations designed to make the true one obvious. A real type feels uncomfortably accurate; the wrong ones feel like reading about someone else.</p>'
++t3.map((h,rank)=>{const T=TYPES[h.t];const cf=S.confirms[h.t]||[];
+return '<div class="card"><b>'+(rank+1)+'. Type '+h.t+' — '+T.name+'</b> <span class="chip '+T.center+'">'+T.center+'</span>'
++'<div class="bar"><i style="width:'+Math.round(h.c/tot*100)+'%"></i></div><div class="small">'+h.c+' of '+tot+' signals · '+T.tagline+'</div>'
++'<details style="margin-top:10px"><summary>Run the 7-day confirmation ('+cf.filter(Boolean).length+'/7 done)</summary>'
++'<ul class="plain">'+T.confirm.map((d,k)=>'<li><input type="checkbox" class="check" data-action="cf" data-t="'+h.t+'" data-k="'+k+'" '+(cf[k]?"checked":"")+'><span>'+esc(d)+'</span></li>').join("")+'</ul>'
++'<button class="btn accent mini" data-action="confirm" data-t="'+h.t+'" '+(cf.filter(Boolean).length>=3?"":"disabled")+'>Confirm this lens &amp; see the map</button>'
++(cf.filter(Boolean).length<3?'<span class="small" style="margin-left:8px">unlocks after 3 days of checking</span>':'')
++'</details></div>';}).join("")
++'<div class="card hush"><span class="label">Your center-lean</span><p class="small">Gut (8·9·1): '+centers.gut+' · Heart (2·3·4): '+centers.heart+' · Head (5·6·7): '+centers.head+' — a rough gravity reading, nothing more.</p></div>'
++'<p><a class="btn ghost" href="#/map">Explore the map without confirming</a></p>';}
+
+function typePage(n,ctx){
+const T=TYPES[n];const own=S.confirmed===n;
+const cf=S.confirms[n]||[];
+let h='<a class="backlink" href="'+(ctx==="reveal"?"#/reveal":"#/map")+'">← back</a>'
++'<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-top:8px">'
++'<div class="symwrap" style="flex:none">'+symbol(120)+'</div>'
++'<div style="min-width:220px;flex:1"><h1 style="margin-top:0">Type '+n+' · '+T.name+'</h1>'
++'<div class="tagline">'+T.aka+'</div>'
++'<div style="margin-top:8px"><span class="chip '+T.center+'">'+CENTERNAME[T.center]+'</span><span class="chip">passion: '+T.passion+'</span><span class="chip">virtue: '+T.virtue+'</span></div></div></div>';
+if(own)h+='<div class="notline">“This is the loop, not you. You are not this.”</div>';
+h+='<div class="card"><span class="label">The loop</span><p>'+T.loop+'</p></div>';
+h+='<div class="grid3">'
++'<div class="card"><span class="label">Core fear</span><p class="small">'+T.fear+'</p></div>'
++'<div class="card"><span class="label">Core desire</span><p class="small">'+T.desire+'</p></div>'
++'<div class="card"><span class="label">The medicine</span><p class="small"><b>'+T.passion+'</b> gripped is <b>'+T.passion+'</b> released as <b>'+T.virtue+'</b>. The passion and the virtue are the same energy — one turned against reality, one moving with it.</p></div>'
++'</div>';
+h+='<div class="card"><span class="label">The spiral — three bands of the same type</span>'
++'<div class="lvlgrid" style="margin-top:8px"><b style="color:#3e6b3e">healthy</b><span>'+T.healthy+'</span><b>average</b><span>'+T.average+'</span><b style="color:#8a3b2a">gripped</b><span>'+T.unhealthy+'</span></div>'
++'<p class="small" style="margin-top:10px">Type describes <em>how</em> you operate. The level describes <em>how well</em> — and it moves, daily. The practice page tracks yours.</p></div>';
+h+='<div class="grid3">'
++'<div class="card"><span class="label">Growth → '+T.toGrowth.to+'</span><p class="small">'+T.toGrowth.practice+'</p></div>'
++'<div class="card"><span class="label">Under stress → '+T.toStress.to+'</span><p class="small">'+T.toStress.note+'</p></div>'
++'<div class="card"><span class="label">Weekly shock</span><p class="small">One deliberate act per week that breaks the type\u2019s default rhythm. Waiting for you on the Practice page.</p></div>'
++'</div>';
+h+='<div class="card"><span class="label">The wings — neighbors that color the type</span>';
+h+=unlockWings()?T.wings.map(w=>'<p style="margin:8px 0 0"><b>'+w.w+'</b> — '+w.t+'</p>').join("")
+:'<p class="lock">Locked — the wings open after 3 check-ins ('+nCheckins()+'/3). Depth is earned by practice, not purchased by curiosity.</p>';
+h+='</div>';
+h+='<div class="card"><span class="label">The instincts — where the fixation runs</span>';
+h+=unlockInst()?INSTINCTS.map(i=>'<p style="margin:8px 0 0"><b>'+i.n+'</b> — '+i.t+'</p>').join("")+'<p class="small" style="margin-top:8px">Most people can name their lead and their blind spot instantly; the middle one is the murk. Same type, different stack — looks like a different person.</p>'
+:'<p class="lock">Locked — the instincts open after 7 check-ins ('+nCheckins()+'/7).</p>';
+h+='</div>';
+h+='<div class="card"><span class="label">The holy idea — '+T.holy+'</span>';
+h+=unlockDepth()?'<p>'+HOLYTEXT[n]+'</p>':'<p class="lock">Locked — the holy ideas (and the triads) open after 10 catches logged ('+nCatches()+'/10). This is the deepest layer; it reads differently once you have watched yourself for a while.</p>';
+h+='</div>';
+if(ctx==="results"||(!own&&ctx!=="reveal")){
+h+='<div class="card hush"><span class="label">Work with this lens</span><ul class="plain">'+T.confirm.map((d,k)=>'<li><input type="checkbox" class="check" data-action="cf" data-t="'+n+'" data-k="'+k+'" '+(cf[k]?"checked":"")+'><span>'+esc(d)+'</span></li>').join("")+'</ul>'
++'<button class="btn accent mini" data-action="confirm" data-t="'+n+'" '+(cf.filter(Boolean).length>=3?"":"disabled")+'>Confirm this lens</button></div>';}
+return h;}
+
+function vMap(){
+let h=header("map")
++'<h1>The map</h1>'
++'<p class="small">Nine fixations, three centers, two laws. Read them all — the map is public. But remember: reading about your neighbor\u2019s fixation is entertainment; watching your own is the work.</p>';
+h+='<div class="card"><span class="label">The three centers</span>'
++'<p class="small">Every type is grounded in a body center with a core emotion it manages. The gut types (8·9·1) manage <b>anger</b> — 8 expresses it, 9 falls asleep to it, 1 swallows it. The heart types (2·3·4) manage <b>shame</b> — 2 reaches out, 3 performs, 4 internalizes. The head types (5·6·7) manage <b>fear</b> — 5 retreats, 6 amplifies, 7 skips ahead.</p></div>';
+h+='<div class="card"><span class="label">The two laws in the figure</span>'
++'<p class="small"><b>The law of three</b> is the triangle (3·6·9): nothing happens with two forces. There is an active push, a receptive field, and a third — reconciling — force that decides whether anything actually occurs. In you: the fixation\u2019s drive, your longing, and the missing reconciler, which is the virtue.</p>'
++'<p class="small"><b>The law of seven</b> is the hexad (1·4·2·8·5·7): the sequence of any process left to run on its own. It is the decimal of 1÷7 — 0.142857, repeating forever — drawn as a figure. Its teaching: every process <em>drifts</em> at fixed intervals, and the drift at the mi–fa interval can only be corrected by a deliberate shock from outside the momentum. Your type\u2019s default is an octave running without shocks. The practice loop is the shock mechanism.</p></div>';
+h+='<div class="grid3">'+ORDER.map(n=>'<a href="#/map/'+n+'" style="text-decoration:none;color:inherit"><div class="card" style="height:100%"><b>'+n+' · '+TYPES[n].name+'</b><div class="small" style="font-style:italic">'+TYPES[n].tagline+'</div><span class="chip '+TYPES[n].center+'" style="margin-top:8px">'+TYPES[n].center+'</span></div></a>').join("")+'</div>';
+if(unlockDepth()){
+h+='<div class="card"><span class="label">The triads (unlocked)</span>'
++'<p class="small"><b>How each type moves:</b> assertive (3·7·8) pushes against the world; dutiful (1·2·6) moves toward it through obligation; withdrawn (4·5·9) takes it inside.</p>'
++'<p class="small"><b>How each type copes:</b> positive outlook (2·7·9) reframes; competency (1·3·5) systematizes; reactive (4·6·8) discharges — “if I feel it hard enough, you will finally get it.”</p></div>';
+} else {
+h+='<div class="card hush"><span class="label">The triads</span><p class="lock">Locked — opens after 10 catches ('+nCatches()+'/10).</p></div>';}
+return h;}
+
+function vReveal(){
+if(!S.confirmed){return header("home")
++'<h1>Almost</h1><p>The reveal comes after the inquiry — or after you confirm a lens you already know.</p>'
++'<p><a class="btn accent" href="#/inquiry">Take the inquiry</a> <a class="btn ghost" href="#/known">I know my type</a></p>';}
+if(!S.lawsSeen){
+return header("home")
++'<h1>First, the whole map</h1>'
++'<div class="symwrap">'+symbol(230,{big:true})+'</div>'
++'<div class="card"><span class="label">The law of three</span><p class="small">The triangle — three forces in every event: active, receptive, reconciling. Two forces alone do nothing; the third is always missing and always required. Your type\u2019s virtue is the reconciling force your fixation keeps forgetting to invoke.</p></div>'
++'<div class="card"><span class="label">The law of seven</span><p class="small">The hexad — 1·4·2·8·5·7, the repeating decimal of one-seventh. Every process — a project, a marriage, a life — is an octave, and left alone it drifts. At fixed intervals, effort from outside the momentum is required to stay on course. These are called shocks. Your personality is an octave that has been running unsupervised for years. What follows is the shock mechanism.</p></div>'
++'<div class="card"><span class="label">The three centers</span><p class="small">Gut: anger — 8 expresses, 9 sleeps, 1 swallows. Heart: shame — 2 reaches, 3 performs, 4 internalizes. Head: fear — 5 retreats, 6 amplifies, 7 skips.</p></div>'
++'<p style="text-align:center"><button class="btn accent" data-action="reveal2">Now show me my position</button></p>'
++'<p class="small" style="text-align:center">You will see the whole figure first, then where you stand in it. This order matters.</p>';}
+return header("home")+typePage(S.confirmed,"reveal")
++'<p style="text-align:center;margin:26px 0"><button class="btn accent" data-action="enter-practice">Enter the practice →</button></p>'
++'<p class="small" style="text-align:center">Confirming this lens marks it as your working hypothesis. It is a door, not a cage — you can change it in Settings.</p>';}
+
+function spiralChart(){
+const data=[...S.checkins].sort((a,b)=>a.date<b.date?-1:1).slice(-30);
+if(data.length<2)return '<p class="small">Two check-ins make a line. One makes a point.</p>';
+const w=640,h=120,pad=8;
+const pts=data.map((d,i)=>{const x=pad+i/(data.length-1)(w-2pad);const y=pad+(d.level-1)/8*(h-2*pad);return x.toFixed(1)+","+y.toFixed(1);}).join(" ");
+return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto" role="img" aria-label="Your check-in history"><line x1="'+pad+'" y1="'+pad+'" x2="'+(w-pad)+'" y2="'+pad+'" stroke="#3e6b3e" stroke-width="0.5" stroke-dasharray="3"/><line x1="'+pad+'" y1="'+(h-pad)+'" x2="'+(w-pad)+'" y2="'+(h-pad)+'" stroke="#8a3b2a" stroke-width="0.5" stroke-dasharray="3"/><polyline points="'+pts+'" fill="none" stroke="#a4552f" stroke-width="1.6"/></svg>'
++'<p class="small">Last '+data.length+' check-ins. Up is freer, down is gripped. Watch for the <em>shape</em> — your descent pattern is more informative than any single point.</p>';}
+
+function vPractice(){
+if(!S.confirmed){return header("practice")
++'<h1>The practice</h1><p>This room opens after you confirm a lens.</p><p><a class="btn accent" href="#/inquiry">Take the inquiry</a></p>';}
+const T=TYPES[S.confirmed];
+const wk=weekKey();
+const wkShocks=S.shockLog.filter(s=>s.week===wk);
+const weekIdx=Math.floor(Date.now()/6048e5)%3;
+const chosen=S.shockChoice&&S.shockChoice.week===wk?S.shockChoice.i:weekIdx;
+const doneToday=S.checkins.some(c=>c.date===today());
+const arrowDone=S.arrowLog.some(a=>a.date===today());
+const shockDone=wkShocks.length>0;
+let h=header("practice")
++'<h1>The practice</h1>'
++'<p class="small">Type '+S.confirmed+' · '+T.name+' — day '+(nCheckins()+1)+' of practice · streak: '+streak()+'</p>';
+if(S.lastExport&&Date.now()-S.lastExport>30*864e5){h+='<div class="banner">Your journal lives only in this browser. It has been over a month since your last backup — consider exporting from <a href="#/settings">Settings</a>.</div>';}
+h+='<div class="card"><span class="label">Daily check-in — where on the spiral today?</span>'
++'<input type="range" min="1" max="9" value="'+(doneToday?S.checkins.find(c=>c.date===today()).level:4)+'" id="lvl" '+(doneToday?'disabled':'')+'>'
++'<div style="display:flex;justify-content:space-between" class="small"><span>1 · free</span><span id="lvltxt"></span><span>9 · gripped</span></div>'
++'<p class="small" id="lvlbl"></p>'
++(doneToday?'<p class="small">Logged today. Return tomorrow — the value of this chart is in its continuity.</p>'
+:'<button class="btn mini accent" data-action="checkin">Log today</button>')
++'</div><div class="card">'+spiralChart()+'</div>';
+h+='<div class="card"><span class="label">A catch — the fixation, caught in the act</span>'
++'<p class="small" style="font-style:italic">'+T.catchHint+'</p>'
++'<input class="tinput" id="c-trig" placeholder="The trigger — what happened (few words)">'
++'<input class="tinput" id="c-body" placeholder="Where in the body? What did it feel like?">'
++'<input class="tinput" id="c-story" placeholder="The story it told — the fixation\u2019s exact line">'
++'<label class="small"><input type="checkbox" id="c-obey" class="check" style="width:auto"> I obeyed it</label>'
++'<button class="btn mini accent" data-action="catch" style="margin-top:6px">Log the catch</button>'
++'<p class="small" style="margin-top:10px">'+nCatches()+' catches logged</p>';
+if(unlockDepth()&&S.catches.length){
+const freq={};S.catches.forEach(c=>{String(c.trig||"").toLowerCase().replace(/[^a-z\s]/g,"").split(/\s+/).forEach(w=>{if(w.length>3)freq[w]=(freq[w]||0)+1;});});
+const top=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,5);
+if(top.length)h+='<p class="small">Recurring words in your triggers: '+top.map(t=>'<b>'+esc(t[0])+'</b> ('+t[1]+')').join(" · ")+' — your real triggers are more specific than your type\u2019s stereotype. These are yours.</p>';}
+if(S.catches.length){h+='<ul class="plain">'+[...S.catches].reverse().slice(0,5).map(c=>'<li><span class="small">'+c.date+'</span><span class="small">'+esc(c.trig)+(c.obey?' · <em>obeyed</em>':' · caught')+'</span></li>').join("")+'</ul>';}
+h+='</div>';
+h+='<div class="card"><span class="label">Arrow work — borrowing from type '+T.toGrowth.to+' (2 minutes)</span>'
++'<p>'+T.arrow2min+'</p>'
++(arrowDone?'<p class="small">Practiced today. That is the whole assignment.</p>':'<button class="btn mini accent" data-action="arrow">Practiced it</button>')
++'</div>';
+h+='<div class="card"><span class="label">This week\u2019s shock — a deliberate break in the octave</span>'
++'<p style="font-size:1.05rem">'+T.shocks[chosen]+'</p>'
++(shockDone?'<p class="small">Shock delivered this week. ('+wkShocks.length+' logged)</p>'
+:'<button class="btn mini accent" data-action="shock">Done — it happened</button>')
++'<p class="small">Alternates: '+T.shocks.map((s,i)=>i===chosen?"":'<a href="javascript:void 0" data-action="shockswap" data-i="'+i+'" style="color:var(--accent-dark)">'+esc(s)+'</a>').filter(Boolean).join(" · ")+'</p>'
++'</div>';
+h+='<div class="card hush"><span class="label">Remember</span><p class="small">The check-in is not a score to improve. It is a weather record. What you are watching for is the <em>pattern</em> — what precedes your descent, what actually lifts you — because that pattern is the fixation\u2019s schedule, and a seen schedule loses its authority.</p></div>';
+return h;}
+
+function vProcess(){
+let h=header("process")
++'<h1>Process mode — the octave</h1>'
++'<p class="small">Before it mapped personalities, this figure mapped <em>processes</em>: any endeavor moves through an octave, and left alone, it drifts at predictable intervals. The famous leak is the mi–fa interval — where initial enthusiasm has burned off and the finish is not yet visible. It cannot be fixed by more of the same momentum. It needs a <b>shock</b>: a deliberate act from outside the process\u2019s own rhythm. Map a real project below. Name the shock <em>in advance</em>.</p>';
+h+='<div class="card"><span class="label">New octave</span>'
++'<input class="tinput" id="o-name" placeholder="Name the endeavor">'
++'<input class="tinput" id="o-do" placeholder="Do — the intention, stated once">'
++'<label class="small">The seven steps</label>'
++['re — the first concrete response','mi — momentum builds','fa — the interval: where energy historically leaks','sol — it works in the open, visible to others','la — refinement, the long middle of polish','si — the last 2% that takes 80%','Do — completion, arrival'].map((hint,i)=>'<input class="tinput" id="o-s'+i+'" placeholder="'+hint+'">').join("")
++'<input class="tinput" id="o-shock" placeholder="The shock at mi–fa — the deliberate act you will insert, named in advance">'
++'<div class="grid3">'
++'<div><label class="small">Active force — what pushes</label><input class="tinput" id="o-f1"></div>'
++'<div><label class="small">Receptive force — what it moves through</label><input class="tinput" id="o-f2"></div>'
++'<div><label class="small">Reconciling force — what makes it actually happen</label><input class="tinput" id="o-f3"></div>'
++'</div>'
++'<button class="btn accent mini" data-action="octave-save">Save this octave</button></div>';
+if(S.octaves.length){h+='<h2>Your octaves</h2>'+[...S.octaves].reverse().map(o=>'<div class="card"><b>'+esc(o.name)+'</b><p class="small" style="font-style:italic">'+esc(o.do_)+'</p><table><tr><th>step</th><th></th></tr>'+o.steps.map((s,i)=>'<tr><td class="small">'+['re','mi','fa','sol','la','si','Do'][i]+'</td><td class="small">'+esc(s)+(i===2?' <b style="color:var(--accent)">← interval</b>':'')+'</td></tr>').join("")+'</table><p class="small" style="margin-top:8px"><b>Shock at mi–fa:</b> '+esc(o.shock)+'</p>'+(o.f1||o.f2||o.f3?'<p class="small"><b>Forces:</b> '+esc(o.f1)+' / '+esc(o.f2)+' / '+esc(o.f3)+'</p>':'')+'</div>').join("");}
+return h;}
+
+function vSettings(){
+let h=header("settings")
++'<h1>Settings</h1>'
++'<div class="card"><span class="label">Your data</span>'
++'<p class="small">Everything lives in this browser\u2019s storage. Nothing has ever been sent anywhere. Your backup file is the only copy in existence outside this device.</p>'
++'<p><button class="btn mini accent" data-action="export">Export backup (.json)</button>'
++'<label class="btn ghost mini" style="cursor:pointer">Import backup<input type="file" id="importfile" accept=".json,application/json" style="display:none"></label>'
++'<button class="btn ghost mini" data-action="wipe">Erase everything</button></p>'
++'<p class="small">'+(S.lastExport?'Last export: '+new Date(S.lastExport).toLocaleDateString():'Never exported.')+'</p></div>';
+if(S.confirmed){h+='<div class="card"><span class="label">Working lens</span><p class="small">Currently working with Type '+S.confirmed+' — '+TYPES[S.confirmed].name+'.</p><button class="btn ghost mini" data-action="unconfirm">Release this lens (re-take the inquiry)</button></div>';}
+h+='<div class="card"><span class="label">Offline use</span><p class="small">Once loaded, the page stays cached in most browsers. For guaranteed offline use, add it to your home screen from your browser\u2019s menu — the app is a PWA manifest away from full install.</p></div>';
+h+='<div class="card hush"><span class="label">About</span><p class="small">The Enneagram symbol, the law of three, the law of seven, the nine fixations, passions, virtues and holy ideas are public-domain concepts (affirmed in Arica Institute v. Palmer, 1992). All text in this application is an original contemplative rendering — no copyrighted test items or organization materials are used. This tool is not therapy, diagnosis, or science; it is a practice. Use it the way you would use a meditation cushion.</p></div>';
+return h;}
+
+/* ---------------- ROUTER ---------------- */
+function route(){
+const h=(location.hash||"#/").replace(/^#//,"");
+const [v,arg]=h.split("/");
+let html="";
+switch(v){
+case "":case "home":html=vHome();break;
+case "known":html=vKnown();break;
+case "inquiry":case "results":html=S.answers.every(a=>a!==null)?vResults():vInquiry();break;
+case "reveal":html=vReveal();break;
+case "practice":html=vPractice();break;
+case "map":html=(arg&&TYPES[+arg])?header("map")+typePage(+arg,"map"):vMap();break;
+case "process":html=vProcess();break;
+case "settings":html=vSettings();break;
+default:html=vHome();}
+("#app").innerHTML=html;
+if(v==="practice")updateLvlText();
+window.scrollTo(0,0);}
+function updateLvlText(){const l=
+("#lvl");if(!l)return;const v=+l.value;
+const band=v<=3?["healthy band","#3e6b3e","moving freely — the virtue has room"]:v<=6?["average band","#7a6a55","running on automatic — the fixation drives, gently"]:["gripped band","#8a3b2a","the fixation has the wheel"];
+("#lvltxt").textContent=band[0];
+("#lvltxt").style.color=band[1];
+("#lvlbl").textContent=band[2];
+("#lvlbl").style.color=band[1];}
+
+/* ---------------- EVENTS ---------------- /
+document.addEventListener("input",e=>{
+if(e.target.id==="lvl")updateLvlText();});
+document.addEventListener("change",e=>{
+if(e.target.id==="importfile"&&e.target.files[0]){
+const f=e.target.files[0];const r=new FileReader();
+r.onload=()=>{try{const d=JSON.parse(r.result);
+if(!("checkins"in d)||!("catches"in d))throw 0;
+S=Object.assign(blank(),d);save();toast("Backup restored. Welcome back.");location.hash="#/";route();
+}catch(err){toast("That file is not a valid backup.");}};
+r.readAsText(f);}
+if(e.target.dataset&&e.target.dataset.action==="cf"){
+const t=+e.target.dataset.t,k=+e.target.dataset.k;
+S.confirms[t]=S.confirms[t]||[];S.confirms[t][k]=e.target.checked;save();}});
+document.addEventListener("click",e=>{
+const a=e.target.closest("[data-action]");if(!a)return;
+const act=a.dataset.action;
+if(act==="q-pick"){S.answers[+a.dataset.i]=+a.dataset.t;save();route();}
+else if(act==="q-back"){const i=+a.dataset.i;if(i>0){S.answers[i-1]=null;save();route();}}
+else if(act==="cf"){/ handled in change */}
+else if(act==="confirm"){S.confirmed=+a.dataset.t;S.lawsSeen=false;save();toast("Lens confirmed. A working hypothesis — not a cage.");location.hash="#/reveal";route();}
+else if(act==="know-confirm"){S.confirmed=+a.dataset.t;S.lawsSeen=false;save();toast("Working with type "+a.dataset.t+".");location.hash="#/reveal";route();}
+else if(act==="reveal2"){S.lawsSeen=true;save();route();window.scrollTo(0,0);}
+else if(act==="enter-practice"){location.hash="#/practice";route();}
+else if(act==="checkin"){const l=
+("#lvl");const v=l?+l.value:4;
+if(S.checkins.some(c=>c.date===today()))return toast("Already logged today.");
+S.checkins.push({date:today(),level:v});save();toast("Logged. Day "+nCheckins()+".");route();}
+else if(act==="catch"){const trig=
+("#c-trig").value.trim();if(!trig)return toast("Name the trigger — even three words.");
+S.catches.push({date:today(),trig:trig,body:
+("#c-body").value.trim(),story:
+("#c-story").value.trim(),obey:
+("#c-obey").checked});save();toast("Caught. That moment of seeing is the entire practice.");route();}
+else if(act==="arrow"){if(S.arrowLog.some(x=>x.date===today()))return;S.arrowLog.push({date:today()});save();toast("Two minutes, banked.");route();}
+else if(act==="shock"){const wk=weekKey();if(S.shockLog.some(s=>s.week===wk))return;S.shockLog.push({week:wk,date:today()});save();toast("Shock delivered. The octave is back on course.");route();}
+else if(act==="shockswap"){const wk=weekKey();S.shockChoice={week:wk,i:+a.dataset.i};save();route();}
+else if(act==="octave-save"){const name=
+("#o-name").value.trim();if(!name)return toast("Name the endeavor first.");
+S.octaves.push({id:Date.now(),name:name,do_:
+("#o-do").value.trim(),steps:[0,1,2,3,4,5,6].map(i=>
+("#o-s"+i).value.trim()),shock:
+("#o-shock").value.trim(),f1:
+("#o-f1").value.trim(),f2:
+("#o-f2").value.trim(),f3:
+("#o-f3").value.trim(),created:today()});save();toast("Octave saved. Watch the mi–fa interval.");route();}
+else if(act==="export"){const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+const u=URL.createObjectURL(blob);const el=document.createElement("a");el.href=u;el.download="notyourtype-backup-"+today()+".json";el.click();URL.revokeObjectURL(u);
+S.lastExport=Date.now();save();toast("Backup downloaded. Keep it somewhere safe.");route();}
+else if(act==="wipe"){if(a.dataset.sure){try{localStorage.removeItem(KEY);}catch(e){}S=blank();toast("Erased. Clean slate.");location.hash="#/";route();}
+else{a.dataset.sure="1";a.textContent="Click again to erase everything";setTimeout(()=>{delete a.dataset.sure;a.textContent="Erase everything";},3000);}}
+else if(act==="unconfirm"){S.confirmed=null;S.lawsSeen=false;save();toast("Lens released. The journal stays — it is still yours.");location.hash="#/inquiry";route();}});
+
+window.addEventListener("hashchange",route);
+route();
+</script>
+
+</body>
+</html>
+</artifact>
